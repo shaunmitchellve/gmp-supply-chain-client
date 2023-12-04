@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body{
+  margin:0;
+  height: 100vh;
+  overflow: hidden;
+}
