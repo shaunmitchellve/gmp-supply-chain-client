@@ -9,5 +9,14 @@
 html, body{
   margin:0;
   height: 100vh;
+  min-height: 100%;
   overflow: hidden;
+}
+
+.tooltip {
+  @apply invisible absolute;
+}
+
+.has-tooltip:hover .tooltip {
+  @apply visible z-50;
 }

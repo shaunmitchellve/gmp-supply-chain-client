@@ -1,10 +1,7 @@
-import React from 'react'
 import Link from 'next/link'
 import FieldImage from './ui/field-image';
-import { inter } from '@/app/ui/fonts';
 
 export default function NotFound() {
-    const bg = "/img/404.jpg";
     return (
     <div className="relative">
         <FieldImage />

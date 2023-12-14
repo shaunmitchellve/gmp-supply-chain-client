@@ -90,7 +90,7 @@ function LoginButton() {
     const { pending } = useFormStatus();
   
     return (
-      <Button type="submit" aria-disabled={pending}>
+      <Button type="submit" aria-disabled={pending} className="w-full">
         Log in
       </Button>
     );
