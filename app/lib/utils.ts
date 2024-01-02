@@ -1,4 +1,6 @@
-'use client'
+'use client';
+
+export const fetcher = (url: any) => fetch(url).then(r => r.json());
 
 // Calculate the ETA
 export function getArrivalTime(departTime: Date, duration: number | undefined):string {
