@@ -1,8 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
-import { initializeApp } from 'firebase/app';
 import { v4 as uuidv4 } from 'uuid';
 
-export const authConfig = {
+const authConfig = {
     pages: {
         signIn: '/auth/signin',
     },
@@ -53,10 +52,7 @@ export const authConfig = {
         generateSessionToken: () => {
             return uuidv4();
         }
-    }
+    },
 } satisfies NextAuthConfig;
 
-export const firebaseApp = initializeApp({
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN
-});
+export default authConfig;
