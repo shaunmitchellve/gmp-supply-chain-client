@@ -3,6 +3,7 @@
 import MountainImage from '@/app/ui/mountain-truck-image';
 import { useFormState, useFormStatus } from 'react-dom';
 import Button from '@/app/ui/button';
+import Spinner from '@/app/ui/spinner';
 import { authenticate } from '@/app/lib/actions';
 import {
     ExclamationCircleIcon,
@@ -44,6 +45,7 @@ export default function LoginForm() {
                                     id="email"
                                     name="email"
                                     placeholder="Enter your email address"
+                                    autoFocus
                                     required
                                     />
                             </div>
@@ -88,10 +90,21 @@ export default function LoginForm() {
 
 function LoginButton() {
     const { pending } = useFormStatus();
-  
+
     return (
       <Button type="submit" aria-disabled={pending} className="w-full">
-        Log in
+        {pending &&
+            <>
+            <Spinner size="5" text="Loggin in..." inline={true} />
+            Logging in...
+            </>
+        }
+
+        {!pending &&
+            <>
+                Log in
+            </>
+        }
       </Button>
     );
   }
