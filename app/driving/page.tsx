@@ -10,26 +10,30 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Button from '@/app/ui/button';
 import { StartDrivingProps } from '@/app/lib/definitions';
-import { getArrivalTime } from '@/app/lib/utils';
+import { getArrivalTime, fetcher } from '@/app/lib/utils';import useSWR from 'swr';
+import { getMockData } from '@/app/lib/actions';
 
 export default function DrivingPage() {
-  const apiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY;
-  const mapId = process.env.NEXT_PUBLIC_MAP_ID;
-  
-  if(apiKey === undefined) {
-      return <></>;
-  }
+  const { data: apiKey, isLoading: apiKeyLoading } = useSWR('/api?key=MAPS_API_KEY', fetcher, { keepPreviousData: true});
+  const { data: mapId, isLoading: mapIdLoading } = useSWR('/api?key=MAPS_MAP_ID', fetcher, { keepPreviousData: true });
 
   const searchParams = useSearchParams();
   const destination = searchParams.get("d");
   const rt = searchParams.get("r");
   const startingLocation = searchParams.get("sl");
   let sl = [];
+
   if (startingLocation) {
     sl = startingLocation.split(",");
   } else return <></>;
 
-  if (!rt || ! destination) return <></>;
+  if (!rt || ! destination) {
+    return <></>;
+  }
+
+  if (apiKeyLoading || mapIdLoading) {
+    return <></>;
+  }
 
   const [ mapProps ] = useState({
       location:{
@@ -39,6 +43,7 @@ export default function DrivingPage() {
       zoom: 18,
       tilt: 45,
   });
+
   const [ destinationProps, setDestinationProps ] = useState({
     arrivalTime: "",
     time: "",
@@ -47,11 +52,11 @@ export default function DrivingPage() {
 
   return(
         <div className="h-full">
-        <APIProvider apiKey={apiKey}>
+        <APIProvider apiKey={apiKey.key}>
           <Map center={mapProps.location}
             zoom={mapProps.zoom}
             disableDefaultUI={true}
-            mapId={mapId}
+            mapId={mapId.key}
             tilt={mapProps.tilt}
             keyboardShortcuts={false}
             className={clsx({"h-[calc(100vh-65px)] md:h-[calc(100vh-100px)] shadow-lg z-10 shadow-gray-400/50": true})}>
@@ -87,13 +92,6 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
   const [index, setIndex] = useState(0);
   const useMock = (process.env.NEXT_PUBLIC_USE_MOCK === "true");
   let geoLocationID:number | undefined = undefined;
-  const coords = [
-    {lat:50.56510138416556, lng:-113.86084005021054},
-    {lat:50.56516145545394, lng:-113.85919925074137},
-    {lat:50.5650938752459, lng:-113.85760573657902},
-    {lat:50.56510138416091, lng:-113.8561564425273},
-    {lat:50.56586878912717, lng:-113.85614934974402},
-  ];
 
   if (!map) {
     return <></>;
@@ -114,23 +112,26 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
 
   useEffect(() => {
     if (useMock) {
-      // @ts-ignore
-      geoLocationID = setInterval(() => {
-        if (index > (coords.length-1)) {
-          clearInterval(geoLocationID);
-          
-          return <></>;
-        }
-    
-        const l = {
-          lat: coords[index].lat,
-          lng: coords[index].lng,
-        };
-    
-        setLocation(l);
-    
-        setIndex(index + 1);
-      }, 5000);
+      getMockData().then(coords=> {
+        // @ts-ignore
+        geoLocationID = setInterval(() => {
+          if (index > (coords.length-1)) {
+            clearInterval(geoLocationID);
+            
+            return <></>;
+          }
+      
+          const l = {
+            lat: coords[index].lat,
+            lng: coords[index].lng,
+          };
+      
+          setLocation(l);
+      
+          setIndex(index + 1);
+        }, 5000);
+      })
+      
     } else {
       if (navigator.geolocation) {
         geoLocationID = navigator.geolocation.watchPosition((position) => {
