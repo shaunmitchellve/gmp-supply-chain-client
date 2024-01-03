@@ -1,7 +1,7 @@
 
 import { initializeApp } from 'firebase/app';
 import { CustomProvider, initializeAppCheck  } from 'firebase/app-check';
-import { initializeAdminApp } from '@/app/lib/firebase-admin';
+import { CreateToken } from '@/app/lib/firebase-admin';
 import { getSecret } from '@/app/lib/secrets-manager';
 
 export async function setupFirebaseApp() {
@@ -51,22 +51,3 @@ const appCheckCustomProvider = new CustomProvider({
     });
   }
 });
-
-async function CreateToken() {
-  try {
-      const adminApp = await initializeAdminApp();
-      const appCheck = await import('firebase-admin/app-check');
-      const appCheckApp = appCheck.getAppCheck(adminApp);
-
-      const ttl = 60 * 60 * 1000; // 1 hour
-
-      const token = await appCheckApp.createToken(await getSecret("FIREBASE_APP_ID"),
-      {
-          ttlMillis: ttl
-      });
-  
-      return token;
-  } catch (err) {
-      throw err;
-  }
-}

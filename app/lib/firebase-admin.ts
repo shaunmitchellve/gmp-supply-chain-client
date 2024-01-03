@@ -8,7 +8,7 @@ import path from 'path'
 const GCLOUD_CREDENTIAL_SUFFIX = 'gcloud/application_default_credentials.json'
 const GCLOUD_CREDENTIAL_PATH = path.resolve(`${process.env.HOME}/.config`, GCLOUD_CREDENTIAL_SUFFIX)
 
-export async function initializeAdminApp(){
+async function initializeAdminApp(){
     const app = await import('firebase-admin/app');
     let adminApp;
 
@@ -29,6 +29,25 @@ export async function initializeAdminApp(){
     }
 
     return adminApp;
+}
+
+export async function CreateToken() {
+  try {
+      const adminApp = await initializeAdminApp();
+      const appCheck = await import('firebase-admin/app-check');
+      const appCheckApp = appCheck.getAppCheck(adminApp);
+
+      const ttl = 60 * 60 * 1000; // 1 hour
+
+      const token = await appCheckApp.createToken(await getSecret("FIREBASE_APP_ID"),
+      {
+          ttlMillis: ttl
+      });
+  
+      return token;
+  } catch (err) {
+      throw err;
+  }
 }
 
 
