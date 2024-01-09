@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { APIProvider, Map, AdvancedMarker, useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
 import {
   TruckIcon,
@@ -12,6 +12,8 @@ import Button from '@/app/ui/button';
 import { StartDrivingProps } from '@/app/lib/definitions';
 import { getArrivalTime, fetcher } from '@/app/lib/utils';import useSWR from 'swr';
 import { getMockData } from '@/app/lib/actions';
+import { saveLocation } from '@/app/lib/utils';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function DrivingPage() {
   const { data: apiKey, isLoading: apiKeyLoading } = useSWR('/api?key=MAPS_API_KEY', fetcher, { keepPreviousData: true});
@@ -35,33 +37,29 @@ export default function DrivingPage() {
     return <></>;
   }
 
-  const [ mapProps ] = useState({
-      location:{
-        lat: parseFloat(sl[0]),
-        lng: parseFloat(sl[1]),
-      },
-      zoom: 18,
-      tilt: 45,
-  });
+  const location = {
+    lat: parseFloat(sl[0]),
+    lng: parseFloat(sl[1]),
+  };
 
   const [ destinationProps, setDestinationProps ] = useState({
     arrivalTime: "",
     time: "",
     distance: "",
   });
-
+  
   return(
         <div className="h-full">
         <APIProvider apiKey={apiKey.key}>
-          <Map center={mapProps.location}
-            zoom={mapProps.zoom}
+          <Map center={location}
+            zoom={18}
             disableDefaultUI={true}
             mapId={mapId.key}
-            tilt={mapProps.tilt}
+            tilt={45}
             keyboardShortcuts={false}
             className={clsx({"h-[calc(100vh-65px)] md:h-[calc(100vh-100px)] shadow-lg z-10 shadow-gray-400/50": true})}>
               
-               <StartDriving rtString={rt} stLocation={mapProps.location} destination={destination} updateDestinationProps={setDestinationProps} />
+               <StartDriving rtString={rt} stLocation={location} destination={destination} updateDestinationProps={setDestinationProps} />
           </Map>
         </APIProvider>
         <Destination arrivalTime={destinationProps.arrivalTime} time={destinationProps.time} distance={destinationProps.distance} />
@@ -69,46 +67,68 @@ export default function DrivingPage() {
   )
 }
 
-function CalcDrivingLeft(currentLocation:google.maps.LatLngLiteral, destination:string) {
-  const routesLibrary = useMapsLibrary("routes");
-  if (!routesLibrary) return null;
-
-  const distanceMatrixService = new routesLibrary.DistanceMatrixService();
-  return distanceMatrixService.getDistanceMatrix({
-    origins: [currentLocation],
-    destinations: [destination],
-    travelMode: google.maps.TravelMode.DRIVING,
-    drivingOptions: {
-      trafficModel: google.maps.TrafficModel.BEST_GUESS,
-      departureTime: new Date(),
-    }
-  });
-}
-
 function StartDriving({rtString, stLocation, destination, updateDestinationProps}: StartDrivingProps) {
   const map = useMap();
   const geometryLibrary = useMapsLibrary("geometry");
+  const routesLibrary = useMapsLibrary("routes");
+  const geocodingLibrary = useMapsLibrary("geocoding");
   const [location, setLocation] = useState(stLocation);
   const [index, setIndex] = useState(0);
   const useMock = (process.env.NEXT_PUBLIC_USE_MOCK === "true");
   let geoLocationID:number | undefined = undefined;
+  const tripId = useRef<string | null>(null);
+  const destinationCoords = useRef<google.maps.LatLngLiteral | null>(null);
+  const placeId = useRef<string | null>(null);
 
-  if (!map) {
-    return <></>;
+  if (tripId.current === null) {
+    tripId.current = uuidv4();
   }
 
-  CalcDrivingLeft(location, destination)?.then((resp) => {
-    const row = resp.rows[0].elements[0];
-    if(row.status === "OK") {
-      updateDestinationProps(
-        {
-          arrivalTime: getArrivalTime(new Date(), row.duration_in_traffic.value),
-          time: row.duration_in_traffic.text,
-          distance: row.distance.text,
-        }
-      );
-    }
-  })
+  useEffect(() => {
+    if (!geocodingLibrary) return;
+
+    const geocoder = new geocodingLibrary.Geocoder();
+    geocoder.geocode({address: destination}).then((res) => {
+      if (res.results.length <= 0) return;
+
+      const results = res.results[0];
+
+      destinationCoords.current = {
+        lat: results.geometry.location.lat(),
+        lng: results.geometry.location.lng(),
+      };
+
+      if (results.place_id !== "" && results.place_id !== null) {
+        placeId.current = results.place_id;
+      }
+    });
+  }, [geocodingLibrary])
+
+  useEffect(() => {
+    if (!routesLibrary) return;
+
+    const distanceMatrixService = new routesLibrary.DistanceMatrixService();
+    distanceMatrixService.getDistanceMatrix({
+      origins: [location],
+      destinations: [destination],
+      travelMode: google.maps.TravelMode.DRIVING,
+      drivingOptions: {
+        trafficModel: google.maps.TrafficModel.BEST_GUESS,
+        departureTime: new Date(),
+      }
+    }).then((resp) => {
+      const row = resp.rows[0].elements[0];
+      if(row.status === "OK") {
+        updateDestinationProps(
+          {
+            arrivalTime: getArrivalTime(new Date(), row.duration_in_traffic.value),
+            time: row.duration_in_traffic.text,
+            distance: row.distance.text,
+          }
+        );
+      }
+    });
+  }, [routesLibrary, location.lat])
 
   useEffect(() => {
     if (useMock) {
@@ -125,13 +145,16 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
             lat: coords[index].lat,
             lng: coords[index].lng,
           };
-      
+
+          if (tripId.current !== null && destinationCoords.current !== null && placeId.current !== null) {
+            saveLocation(l, destinationCoords.current, stLocation, tripId.current, placeId.current);
+          }
+
           setLocation(l);
       
           setIndex(index + 1);
         }, 5000);
-      })
-      
+      });
     } else {
       if (navigator.geolocation) {
         geoLocationID = navigator.geolocation.watchPosition((position) => {
@@ -175,6 +198,8 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
   } else {
     return <></>;
   }
+
+  if (!map) return <></>
 
   const route = new google.maps.Polyline(polyLineOptions);
   route.setMap(map);
