@@ -1,5 +1,5 @@
-import { getSecret } from "@/app/lib/secrets-manager";
-import { NextResponse } from 'next/server'
+import { getSecret } from '@/app/lib/secrets-manager';
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic' // defaults to auto
 

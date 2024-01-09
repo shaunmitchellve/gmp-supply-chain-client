@@ -11,12 +11,12 @@ export default function ClientNav({ children, className, setDestination }: Clien
 
     useEffect(() => {
         auth().then(session => {
-            if (session?.admin) {
+            if (session?.isAdmin) {
                 setIsAdmin(true);
             }
         });
     });
-    
+
     return (
         <div className={clsx("flex flex-col gap-y-2", className)}>
             <div className="has-tooltip w-40">
