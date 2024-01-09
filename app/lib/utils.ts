@@ -1,6 +1,8 @@
 'use client';
 
-export const fetcher = (url: any) => fetch(url).then(r => r.json());
+import { auth } from "@/auth";
+
+export const fetcher = (url: any, args?: any) => fetch(url, args).then(r => r.json());
 
 // Calculate the ETA
 export function getArrivalTime(departTime: Date, duration: number | undefined):string {
@@ -14,4 +16,38 @@ export function getArrivalTime(departTime: Date, duration: number | undefined):s
     let ampm = time.getHours() >= 12 ? "pm" : "am";
 
     return (time.getHours() % 12 || 12).toString() + ":" + min + " " + ampm;
+}
+
+export function saveLocation(
+        location: google.maps.LatLngLiteral,
+        destination: google.maps.LatLngLiteral,
+        startLocation: google.maps.LatLngLiteral,
+        tripId: string,
+        placeId: string
+    ) {
+    auth().then(session => {
+        const tripData = {
+            uid: session?.user?.id,
+            email: session?.user?.email,
+            location: {
+                lat: location.lat,
+                lng: location.lng,
+            },
+            startLocation: startLocation,
+            destination: destination,
+            tripid: tripId,
+            placeId: placeId,
+        }
+
+        const post = {
+            method: "POST",
+            cache: "no-cache",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(tripData),
+        };
+
+        fetcher('/driving/api', post);
+    });
 }

@@ -1,4 +1,3 @@
-
 import { initializeApp } from 'firebase/app';
 import { CustomProvider, initializeAppCheck  } from 'firebase/app-check';
 import { CreateToken } from '@/app/lib/firebase-admin';
@@ -40,14 +39,19 @@ export async function setupFirebaseApp() {
 * Setup App Check for all client side Firebase app usage
 */
 const appCheckCustomProvider = new CustomProvider({
-  getToken: async () => {
-    const appCheckToken = await CreateToken();
+  getToken: () => {
+    return new Promise(async (resolve, _reject) => {
+      try {
+        const appCheckToken = await CreateToken();
 
-    return new Promise((resolve, _reject) => {
-      resolve({
-        token: appCheckToken.token,
-        expireTimeMillis: Date.now() + appCheckToken.ttlMillis,
-      })
+        resolve({
+          token: appCheckToken.token,
+          expireTimeMillis: Date.now() + appCheckToken.ttlMillis,
+        });
+        
+      } catch (err) {
+        _reject(err);
+      } 
     });
   }
 });
