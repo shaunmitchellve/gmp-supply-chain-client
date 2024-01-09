@@ -1,32 +1,12 @@
 'use server';
 
 import NextAuth from 'next-auth';
-import type { User } from '@/app/lib/definitions';
 import authConfig from '@/auth.config';
 import { setupFirebaseApp } from '@/app/lib/firebase';
-import { signInWithEmailAndPassword, getAuth, UserCredential } from 'firebase/auth';
+import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
-
-function getUser(userCredential: UserCredential): User {
-  let em:string = "";
-  let ev:Date | null = null;
-
-  if (userCredential.user.email !== null) {
-    em = userCredential.user.email;
-  }
-
-  if (userCredential.user.emailVerified) {
-    ev = new Date();
-  }
-
-  return {
-    id: userCredential.user.uid,
-    name: userCredential.user.displayName,
-    email: em,
-    emailVerified: ev,
-  }
-}
+import { User } from '@/app/lib/user';
 
 export const { auth, signIn, signOut } = NextAuth({
     ...authConfig,
@@ -45,7 +25,14 @@ export const { auth, signIn, signOut } = NextAuth({
                 try {
                   const userCredential = await signInWithEmailAndPassword(getAuth(firebaseApp), email, password);
 
-                  return getUser(userCredential);
+                  const user = new User(userCredential.user.uid, email);
+                  user.emailVerified = userCredential.user.emailVerified;
+
+                  if (user.email?.includes("admin_")) {
+                    user.isAdmin = true;
+                  }
+
+                  return user;
                 } catch (error: any) {
                   console.log("FIREBAE AUTH ERROR: ", error)
                   return null;

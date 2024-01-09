@@ -15,7 +15,7 @@ const authConfig = {
                 }
 
                 if (nextUrl.pathname === '/admin') {
-                    if (!auth.admin) {
+                    if (!auth.isAdmin) {
                         return Response.redirect(new URL('/auth/error?error=accessdenied', nextUrl));;
                     }
                 }
@@ -27,19 +27,19 @@ const authConfig = {
         async jwt({ token, user }) { // @todo: Add in hook for verififing email
             if (user) {
                 token.emailVerified = user.emailVerified;
-
-                if (user.email?.includes("admin_")) {
-                    token.admin = true;
-                } else {
-                    token.admin = false;
-                }
+                token.isAdmin = user.isAdmin;
+                token.email = user.email;
             }
 
             return token;
         },
         async session({ session, token }) {
-               if (token.admin) {
-                session.admin = token.admin
+            session.isAdmin = token.isAdmin;
+            if (session.user != undefined) {
+                session.user.email = token.email;
+                if (token.sub) {
+                    session.user.id = token.sub;
+                }
             }
 
             return session;
