@@ -64,7 +64,7 @@ export default function Home() {
             "h-full":loading,
             "h-[calc(100vh-65px)] md:h-[calc(100vh-100px)]":!loading&&destination, "shadow-lg z-10 shadow-gray-400/50": true})}>
             {loading &&
-                <Spinner size="10" fullScreen={true}>
+                <Spinner size="20" fullScreen={true}>
                     <span className="inline-flex">Getting your percise location</span>
                 </Spinner>
             }

@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { CustomProvider, initializeAppCheck  } from 'firebase/app-check';
-import { CreateToken } from '@/app/lib/firebase-admin';
+import { createToken } from '@/app/lib/firebase-admin';
 import { getSecret } from '@/app/lib/secrets-manager';
 
 export async function setupFirebaseApp() {
@@ -42,7 +42,7 @@ const appCheckCustomProvider = new CustomProvider({
   getToken: () => {
     return new Promise(async (resolve, _reject) => {
       try {
-        const appCheckToken = await CreateToken();
+        const appCheckToken = await createToken();
 
         resolve({
           token: appCheckToken.token,

@@ -18,5 +18,5 @@ export async function authenticate(
 }
 
 export async function getMockData() {
-   return require('../data/mock_travel.json');
+   return require('./data/mock_travel.json');
 }

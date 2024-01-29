@@ -51,3 +51,11 @@ export function saveLocation(
         fetcher('/driving/api', post);
     });
 }
+
+export function currentDate(): string {
+    const currentDate = new Date();
+    const currentMonth = `${currentDate.getMonth() + 1}`.padStart(2, '0');
+    const currentDay = `${currentDate.getDate()}`.padStart(2, '0');
+
+    return `${currentDate.getFullYear()}-${currentMonth}-${currentDay}`;
+}

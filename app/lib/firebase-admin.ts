@@ -23,7 +23,7 @@ export async function initializeAdminApp(){
     return adminApp;
 }
 
-export async function CreateToken() {
+export async function createToken() {
   try {
       const adminApp = await initializeAdminApp();
       const appCheck = await import('firebase-admin/app-check');
@@ -40,4 +40,10 @@ export async function CreateToken() {
   } catch (err) {
       throw err;
   }
+}
+
+export async function getFireStore() {
+    const admin = await initializeAdminApp();
+    const fs = await import('firebase-admin/firestore');
+    return fs.getFirestore(admin);
 }
