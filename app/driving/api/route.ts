@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server';
-import { initializeAdminApp } from '@/app/lib/firebase-admin';
+import { getFireStore } from '@/app/lib/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { v4 as uuidv4 } from 'uuid';
 
 export const dynamic = 'force-dynamic' // defaults to auto
 
 export async function POST(request: Request) {
-    const admin = await initializeAdminApp();
-    const fs = await import('firebase-admin/firestore');
-    const db = fs.getFirestore(admin);
+    const db = await getFireStore();
 
     const data = await request.json();
 
