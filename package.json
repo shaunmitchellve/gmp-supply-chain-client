@@ -11,7 +11,7 @@
   "dependencies": {
     "@google-cloud/secret-manager": "^5.0.1",
     "@heroicons/react": "^2.0.18",
-    "@vis.gl/react-google-maps": "^0.5.0",
+    "@vis.gl/react-google-maps": "^0.5.4",
     "clsx": "^2.0.0",
     "firebase": "^10.6.0",
     "firebase-admin": "^12.0.0",
@@ -24,7 +24,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/google.maps": "^3.54.10",
+    "@types/google.maps": "^3.55.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
