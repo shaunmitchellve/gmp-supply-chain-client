@@ -1,21 +1,24 @@
-import { Metadata } from 'next';
-import { signOut } from '@/auth'
+import FilterBar from '@/app/ui/admin/filterBar';
+import AdminMap from '@/app/ui/admin/map';
 
-export const metadata: Metadata = {
-  title: "Admin"
-}
+export default async function AdminPage({ searchParams } : {
+  searchParams?:{
+    driver?: string;
+    date?: string;
+  };
+}) {
 
-export default function LoginPage() {
-    return (
-        <>
-      <h1>Admin</h1>
-      <form action={async () => {
-        'use server'
-        await signOut();
+  const currentDate = new Date();
+  const currentMonth = `${currentDate.getMonth() + 1}`.padStart(2, '0');
+  const currentDay = `${currentDate.getDate()}`.padStart(2, '0');
 
-      }}>
-      <button type="submit">Singout</button>
-      </form>
-      </>
-    )
+  const driver = searchParams?.driver || '';
+  const date = searchParams?.date || `${currentDate.getFullYear()}-${currentMonth}-${currentDay}`;
+
+  return (
+    <div className="h-full overflow-hidden flex flex-col">
+    <FilterBar />
+    <AdminMap driver={driver} date={date} />
+    </div>
+  )
 }
