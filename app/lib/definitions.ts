@@ -49,3 +49,19 @@ export interface ClientNavProps {
   className?: string;
   setDestination?: any;
 }
+
+export interface Legs {
+  lat: number;
+  lng: number;
+  timestamp: Date;
+}
+
+export interface ReturnTrips {
+  id: string;
+  uid: string;
+  email: string;
+  startLocation: google.maps.LatLngLiteral;
+  destination: google.maps.LatLngLiteral;
+  insertTimeStamp: Date | null;
+  route: Array<Legs>;
+}
