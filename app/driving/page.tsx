@@ -72,7 +72,11 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
   const geometryLibrary = useMapsLibrary("geometry");
   const routesLibrary = useMapsLibrary("routes");
   const geocodingLibrary = useMapsLibrary("geocoding");
-  const [location, setLocation] = useState(stLocation);
+  const overLayLibrary = useMapsLibrary("maps");
+  const [location, setLocation] = useState({
+    "current": stLocation,
+    "last": stLocation,
+  });
   const [index, setIndex] = useState(0);
   const useMock = (process.env.NEXT_PUBLIC_USE_MOCK === "true");
   let geoLocationID:number | undefined = undefined;
@@ -109,7 +113,7 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
 
     const distanceMatrixService = new routesLibrary.DistanceMatrixService();
     distanceMatrixService.getDistanceMatrix({
-      origins: [location],
+      origins: [location.current],
       destinations: [destination],
       travelMode: google.maps.TravelMode.DRIVING,
       drivingOptions: {
@@ -128,7 +132,7 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
         );
       }
     });
-  }, [routesLibrary, location.lat])
+  }, [routesLibrary, location.current.lat])
 
   useEffect(() => {
     if (useMock) {
@@ -150,7 +154,7 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
             saveLocation(l, destinationCoords.current, stLocation, tripId.current, placeId.current);
           }
 
-          setLocation(l);
+          setLocation({"last": location.current, "current": l});
       
           setIndex(index + 1);
         }, 5000);
@@ -158,10 +162,12 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
     } else {
       if (navigator.geolocation) {
         geoLocationID = navigator.geolocation.watchPosition((position) => {
-          setLocation({
+          setLocation({"last": location.current, "current": {
             lat: position.coords.latitude,
             lng: position.coords.longitude
-          });
+          }});
+
+          setIndex(index + 1);
         }, (error) => {
           console.log("Unable to watch position");
           if (!useMock && typeof geoLocationID !== "undefined") {
@@ -182,7 +188,7 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
         clearInterval(geoLocationID);
       }
     }
-  }, [location.lat]);
+  }, [index]);
 
   let polyLine:google.maps.LatLng[];
   const polyLineOptions =  {
@@ -206,15 +212,23 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
   route.setPath(polyLine);
 
   if (index >= 1) {
-    map.setHeading(geometryLibrary.spherical.computeHeading(polyLine[(index-1)], polyLine[index]));
-    map.panTo(location);
+    /**
+     * Attempting to use a "shadow" or "fake" location to pan the map to in order to keep the advance marker icon
+     * at the bottom of the visible map bounds. This isnt working at the moment.
+     */
+    // const southWest = new google.maps.LatLng(map.getBounds()?.getSouthWest().lat()!, location.current.lng);
+    // const distance = geometryLibrary.spherical.computeDistanceBetween(location.current, southWest);
+    const heading = geometryLibrary.spherical.computeHeading(location.last, location.current);
+    // const shadow = geometryLibrary.spherical.computeOffset(location.current, distance, heading);
+    map.setHeading(heading);
+    map.panTo(location.current);
   } else {
     map.setHeading(geometryLibrary.spherical.computeHeading(polyLine[0], polyLine[1]));
     map.setCenter(polyLine[0]);
   }
 
   return (
-    <AdvancedMarker position={location}>
+    <AdvancedMarker position={location.current}>
       <TruckIcon className="flex h-8 text-red-600"/>
    </AdvancedMarker>
    )
