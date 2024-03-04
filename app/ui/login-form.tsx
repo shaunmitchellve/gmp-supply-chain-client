@@ -24,7 +24,7 @@ export default function LoginForm() {
                             Welcome to Cymbol Shops <span className="text-red-600">Track-It</span>
                         </h1>
                         <p className="pr-3">
-                            Track-It provides Cymbol Shops with real-time visibility into into our supply chain.
+                            Track-It provides Cymbol Shops with real-time visibility into into your supply chain.
                         </p>
                     </div>
                 </div>
