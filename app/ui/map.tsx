@@ -46,7 +46,7 @@ export default function HomeMap() {
         enableHighAccuracy: true,
       });
     }
-  }, [mapProps.location.lat]);
+  }, [mapProps.location.lat]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (apiKeyLoading || mapIdLoading) {
     return <></>;

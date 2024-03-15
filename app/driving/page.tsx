@@ -24,6 +24,11 @@ export default function DrivingPage() {
   const rt = searchParams.get("r");
   const startingLocation = searchParams.get("sl");
   let sl = [];
+  const [ destinationProps, setDestinationProps ] = useState({
+    arrivalTime: "",
+    time: "",
+    distance: "",
+  });
 
   if (startingLocation) {
     sl = startingLocation.split(",");
@@ -41,12 +46,6 @@ export default function DrivingPage() {
     lat: parseFloat(sl[0]),
     lng: parseFloat(sl[1]),
   };
-
-  const [ destinationProps, setDestinationProps ] = useState({
-    arrivalTime: "",
-    time: "",
-    distance: "",
-  });
   
   return(
         <div className="h-full">
@@ -106,7 +105,7 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
         placeId.current = results.place_id;
       }
     });
-  }, [geocodingLibrary])
+  }, [geocodingLibrary, destination])
 
   useEffect(() => {
     if (!routesLibrary) return;
@@ -132,13 +131,13 @@ function StartDriving({rtString, stLocation, destination, updateDestinationProps
         );
       }
     });
-  }, [routesLibrary, location.current.lat])
+  }, [routesLibrary, location.current.lat]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (useMock) {
       getMockData().then(coords=> {
         // @ts-ignore
-        geoLocationID = setInterval(() => {
+        geoLocationID = setInterval(() => { // eslint-disable-line react-hooks/exhaustive-deps
           if (index > (coords.length-1)) {
             clearInterval(geoLocationID);
             

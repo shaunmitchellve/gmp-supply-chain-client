@@ -77,7 +77,7 @@ export default function Directions({
                 polyLine.setMap(null);
             });
         }
-    }, [directionsService]);
+    }, [directionsService]); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (polyLines.length > 0) {
         for(let i = 0; i < polyLines.length; i++) {
