@@ -1,5 +1,3 @@
-'use server';
-
 import NextAuth from 'next-auth';
 import authConfig from '@/auth.config';
 import { setupFirebaseApp } from '@/app/lib/firebase';
@@ -8,7 +6,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { User } from '@/app/lib/user';
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut } =  NextAuth({
     ...authConfig,
     providers: [
       Credentials({

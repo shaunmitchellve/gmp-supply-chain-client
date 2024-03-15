@@ -1,16 +1,18 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { ArrowRightOnRectangleIcon, MagnifyingGlassIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import Button from "@/app/ui/button";
 import { ClientNavProps  } from "@/app/lib/definitions";
 import clsx from 'clsx';
-import { signOut, auth } from "@/auth";
+import { signOutClient, authClient } from "@/app/lib/actions";
 import Link from 'next/link';
 
 export default function ClientNav({ children, className, setDestination }: ClientNavProps) {
     const [isAdmin, setIsAdmin ] = useState(false);
 
     useEffect(() => {
-        auth().then(session => {
+        authClient().then(session => {
             if (session?.isAdmin) {
                 setIsAdmin(true);
             }
@@ -23,7 +25,7 @@ export default function ClientNav({ children, className, setDestination }: Clien
                 <span className="absolute left-12 top-2 text-xs tooltip rounded shadow-lg p-1 bg-gray-800 text-white">Sign Out</span>
                 <Button type="button" onClick={
                     async () => {
-                        await signOut(); 
+                        await signOutClient(); 
                     }}><ArrowRightOnRectangleIcon className="flex w-4"/></Button>
             </div>
             {setDestination &&

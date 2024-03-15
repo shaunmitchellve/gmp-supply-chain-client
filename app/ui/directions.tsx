@@ -8,9 +8,6 @@ import {
 import clsx from 'clsx';
 import { DirectionsProps } from '@/app/lib/definitions';
 import Button from '@/app/ui/button';
-import {
-    MagnifyingGlassIcon,
-  } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { getArrivalTime } from '@/app/lib/utils';
 
@@ -116,7 +113,6 @@ export default function Directions({
                     <h1 className="text-base text-center">{leg.duration_in_traffic?.text} | {leg.distance?.text}</h1>
                 </div>
             </div>
-            
         </>
     );
 }

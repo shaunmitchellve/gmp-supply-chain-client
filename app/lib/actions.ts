@@ -1,6 +1,6 @@
 'use server';
 
-import { signIn } from '@/auth';
+import { signIn, signOut, auth } from '@/auth';
 import type { AuthError } from '@auth/core/errors';
 
 export async function authenticate(
@@ -19,4 +19,12 @@ export async function authenticate(
 
 export async function getMockData() {
    return require('./data/mock_travel.json');
+}
+
+export async function signOutClient() {
+    await signOut();
+}
+
+export async function authClient() {
+    return await auth();
 }

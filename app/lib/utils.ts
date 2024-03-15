@@ -1,6 +1,6 @@
 'use client';
 
-import { auth } from "@/auth";
+import { authClient } from "@/app/lib/actions";
 
 export const fetcher = (url: any, args?: any) => fetch(url, args).then(r => r.json());
 
@@ -25,7 +25,7 @@ export function saveLocation(
         tripId: string,
         placeId: string
     ) {
-    auth().then(session => {
+    authClient().then(session => {
         const tripData = {
             uid: session?.user?.id,
             email: session?.user?.email,

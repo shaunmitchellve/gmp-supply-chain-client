@@ -24,10 +24,10 @@ export async function setupFirebaseApp() {
       projectId: process.env.PROJECT_ID,
     });
 
-    initializeAppCheck(firebaseApp, {
-      provider: appCheckCustomProvider,
-      isTokenAutoRefreshEnabled: true
-    });
+    // initializeAppCheck(firebaseApp, {
+    //   provider: appCheckCustomProvider,
+    //   isTokenAutoRefreshEnabled: true
+    // });
 
     return firebaseApp;
   } catch (err) {
