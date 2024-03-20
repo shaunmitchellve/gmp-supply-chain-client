@@ -1,47 +1,57 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import {usePathname} from 'next/navigation';
 import clsx from 'clsx';
 import ShopsLogo from '@/app/ui/shops-logo';
-import { Cog6ToothIcon } from "@heroicons/react/24/outline";
-import { signOut } from '@/auth';
+import {MapIcon, ArrowRightOnRectangleIcon} from '@heroicons/react/24/outline';
+import {signOutClient} from '@/app/lib/actions';
 
-const links = [
-    { name: "Dashboard", href:"/admin", icon: Cog6ToothIcon}
-];
+const links = [{name: 'Dashboard', href: '/admin', icon: MapIcon}];
 
 export default function AdminNav() {
-    const pathname = usePathname();
+  const pathname = usePathname();
 
-    return (
-        <div className="flex h-full flex-col px-3 py-4 border-r-2 border-gray-200 shadow-md">
-            <Link 
-                className="flex"
-                href="/">
-                    <ShopsLogo />
-             </Link>
-             <div className="flex grow flex-row justify-between space-x-2 mt-10 h-10">
-             {links.map((link) => {
-                const LinkIcon = link.icon;
-                return (
-                    <Link key={link.name} href={link.href}
-                        className={clsx(
-                            "flex h-[48px] grow items-center justify-left gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-red-300 hover:text-red-600",
-                            {
-                                "bg-red-300 text-red-600": pathname === link.href,
-                            },
-                        )}
-                    >
-                            <LinkIcon className="flex w-8" />
-                            <p className="hidden md:block">{link.name}</p>
-                    </Link>
-                )})
-            }
-             </div>
-             <div className="border-t-2 border-gray-200 text-center hover:bg-red-300 hover:cursor-pointer hover:text-red-600">
-                <a onClick={async () => { await signOut(); }}>Sign Out</a>
-             </div>
-        </div>
-    )
+  return (
+    <aside className="fixed flex-col w-60 h-full bg-red-900 -translate-x-48 z-20">
+      <Link
+        className="flex bg-white rounded-full p-2 w-10 h-10 float-right mr-1 mt-2"
+        href="/"
+      >
+        <ShopsLogo />
+      </Link>
+      <div className="flex flex-col w-full mt-24 space-y-2">
+        {links.map(link => {
+          const LinkIcon = link.icon;
+          return (
+            <Link
+              key={link.name}
+              href={link.href}
+              className={clsx(
+                'hover:ml-5 hover:text-red-300 w-full h-[50px] bg-red-900 rounded-full transform ease-in-out duration-300 flex justify-end pr-4',
+                {
+                  'text-red-300': pathname === link.href,
+                  'text-white': pathname !== link.href,
+                }
+              )}
+              title={link.name}
+              aria-label={link.name}
+            >
+              <LinkIcon className="w-6 h-6 mt-3" />
+            </Link>
+          );
+        })}
+      </div>
+      <a
+        onClick={async () => {
+          await signOutClient();
+        }}
+        title="Log Out"
+        aria-label="Log Out"
+        className="hover:ml-5 hover:text-red-300 text-white w-full h-[50px] bg-red-900 rounded-full transform ease-in-out duration-300 flex justify-end pr-4 cursor-pointer"
+      >
+        <ArrowRightOnRectangleIcon className="w-6 h-6 mt-3" />
+      </a>
+    </aside>
+  );
 }

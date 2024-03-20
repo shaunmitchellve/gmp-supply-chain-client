@@ -1,10 +1,10 @@
-import  Image from 'next/image';
+import Image from 'next/image';
 import MTImage from '@/app/ui/img/field.jpg';
 
 export default function FieldImage() {
   const style = {
     opacity: 0.7,
-    zIndex: -1
+    zIndex: -1,
   };
 
   return (

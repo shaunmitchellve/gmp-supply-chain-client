@@ -1,44 +1,51 @@
 import NextAuth from 'next-auth';
 import authConfig from '@/auth.config';
-import { setupFirebaseApp } from '@/app/lib/firebase';
-import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import {setupFirebaseApp} from '@/app/lib/firebase';
+import {signInWithEmailAndPassword, getAuth} from 'firebase/auth';
 import Credentials from 'next-auth/providers/credentials';
-import { z } from 'zod';
-import { User } from '@/app/lib/user';
+import {z} from 'zod';
+import {User} from '@/app/lib/user';
 
-export const { auth, signIn, signOut } =  NextAuth({
-    ...authConfig,
-    providers: [
-      Credentials({
-        async authorize(credentials){
-          const firebaseApp = await setupFirebaseApp();
+export const {auth, signIn, signOut} = NextAuth({
+  ...authConfig,
+  providers: [
+    Credentials({
+      async authorize(credentials) {
+        const firebaseApp = await setupFirebaseApp();
 
-            const parsedCredentials = z
-            .object({ email: z.string().email(), password: z.string().min(6)})
-            .safeParse(credentials);
+        const parsedCredentials = z
+          .object({email: z.string().email(), password: z.string().min(6)})
+          .safeParse(credentials);
 
-            if (parsedCredentials.success) {
-                const { email, password } = parsedCredentials.data;
+        if (parsedCredentials.success) {
+          const {email, password} = parsedCredentials.data;
 
-                try {
-                  const userCredential = await signInWithEmailAndPassword(getAuth(firebaseApp), email, password);
+          try {
+            const userCredential = await signInWithEmailAndPassword(
+              getAuth(firebaseApp),
+              email,
+              password
+            );
 
-                  const user = new User(userCredential.user.uid, email);
-                  user.emailVerified = userCredential.user.emailVerified;
+            const user = new User(userCredential.user.uid, email);
+            user.emailVerified = userCredential.user.emailVerified;
 
-                  if (user.email?.includes("admin_")) {
-                    user.isAdmin = true;
-                  }
-
-                  return user;
-                } catch (error: any) {
-                  console.log("FIREBAE AUTH ERROR: ", error)
-                  return null;
-                }
+            if (user.email?.includes('admin_')) {
+              user.isAdmin = true;
             }
 
-            console.log('Invalid credentials');
+            return user;
+          } catch (error) {
+            const message =
+              error instanceof Error ? error.message : 'Unknown error';
+            console.log('FIREBAE AUTH ERROR: ', message);
             return null;
-        },
-    })],
+          }
+        }
+
+        console.log('Invalid credentials');
+        return null;
+      },
+    }),
+  ],
 });
