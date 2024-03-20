@@ -2,13 +2,25 @@
   "name": "gmp-supply-chain-client",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "^18.17"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "npm run gts-lint",
+    "gts-lint": "gts lint",
+    "next-lint": "next lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint"
   },
   "dependencies": {
+    "@auth/core": "^0.28.0",
     "@google-cloud/secret-manager": "^5.0.1",
     "@heroicons/react": "^2.0.18",
     "@vis.gl/react-google-maps": "^0.5.4",
@@ -26,17 +38,18 @@
   },
   "devDependencies": {
     "@types/google.maps": "^3.55.3",
-    "@types/node": "^20",
+    "@types/node": "20.8.2",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^9.0.7",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.3",
+    "gts": "^5.2.0",
     "postcss": "^8",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "typescript": "~5.2.0"
   }
 }
