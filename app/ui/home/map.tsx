@@ -20,7 +20,7 @@ export default function HomeMap() {
     zoom: 5,
   });
   const [loading, setLoading] = useState(true);
-  const [destination, setDestination] = useState(null);
+  const [destination, setDestination] = useState('');
 
   const {data: apiKey, isLoading: apiKeyLoading} = useSWR(
     '/api?key=MAPS_API_KEY',
@@ -107,7 +107,6 @@ export default function HomeMap() {
               className="w-full h-full"
               currentLocation={mapProps.location}
               dest={destination}
-              setDestination={setDestination}
             />
             <ClientNav
               className="absolute top-4 left-4 z-10"

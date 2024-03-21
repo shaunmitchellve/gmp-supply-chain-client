@@ -19,19 +19,18 @@ export type DirectionsProps = {
   currentLocation: google.maps.LatLngLiteral;
   dest: string;
   className?: string | undefined;
-  setDestination: any;
 };
 
 export type DestinationProps = {
   className?: string | undefined;
-  setDestination: any;
+  setDestination: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export type StartDrivingProps = {
   rtString: string;
   stLocation: google.maps.LatLngLiteral;
   destination: string;
-  updateDestinationProps: React.Dispatch<React.SetStateAction<any>>;
+  updateDestinationProps: React.Dispatch<React.SetStateAction<DrivingTime>>;
 };
 
 export type DrivingTime = {
@@ -79,7 +78,7 @@ export interface ButtonProps
 
 export interface ClientNavProps {
   className?: string;
-  setDestination?: any;
+  setDestination?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface Legs {
