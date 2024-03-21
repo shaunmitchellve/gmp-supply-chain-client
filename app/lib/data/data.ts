@@ -74,20 +74,9 @@ export async function fetchTrips(
       for (const trip of qs.docs) {
         returnTrips = setupReturnTrips();
         returnTrips.id = trip.id;
-        //returnTrips.uid = trip.data().uid;
         returnTrips.email = trip.data().email;
         returnTrips.startLocation = trip.data().startLocation;
         returnTrips.destination = trip.data().destination;
-        //returnTrips.insertTimeStamp = trip.data().insertTimeStamp.toDate();
-        // returnTrips.route = [];
-        // let legs = await trips.doc(trip.id).collection('route').orderBy('timestamp').get();
-        // for (let leg of legs.docs) {
-        //     returnTrips.route.push({
-        //         lat: leg.data().lat,
-        //         lng: leg.data().lng,
-        //         timestamp: leg.data().timestamp.toDate(),
-        //     });
-        // }
 
         returnValue.push(returnTrips);
       }
@@ -113,7 +102,6 @@ export async function fetchTrip(tripId: string) {
       .orderBy('timestamp');
     const routes = await trip.get();
 
-    console.log(routes);
     if (!routes.empty) {
       const returnLegs: Legs[] = [];
 
@@ -125,7 +113,6 @@ export async function fetchTrip(tripId: string) {
         });
       }
 
-      console.log('RETURN: ', JSON.stringify(returnLegs));
       return JSON.stringify(returnLegs);
     } else {
       return '{}';

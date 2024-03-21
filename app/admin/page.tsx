@@ -22,7 +22,7 @@ export default async function AdminPage({
 
   return (
     <>
-      <FilterBar driver={driver} date={date} />
+      <FilterBar driver={driver} date={date} tripId={tripId} />
       <div className="h-full overflow-hidden flex w-full">
         <AdminMap tripId={tripId} />
       </div>
