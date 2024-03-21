@@ -4,7 +4,7 @@ import React from 'react';
 import {useMapsLibrary} from '@vis.gl/react-google-maps';
 import Button from '@/app/ui/button';
 import clsx from 'clsx';
-import {DestinationProps} from '../lib/definitions';
+import {DestinationProps} from '../../lib/definitions';
 
 export default function DestinationCard({
   className,

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import FieldImage from './ui/field-image';
+import FieldImage from './ui/image/field-image';
 
 export default function NotFound() {
   return (

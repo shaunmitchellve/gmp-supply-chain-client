@@ -1,6 +1,6 @@
 import {Metadata} from 'next';
 import Link from 'next/link';
-import DeniedImage from '@/app/ui/denied-image';
+import DeniedImage from '@/app/ui/image/denied-image';
 
 export const metadata: Metadata = {
   title: 'Access Denied',

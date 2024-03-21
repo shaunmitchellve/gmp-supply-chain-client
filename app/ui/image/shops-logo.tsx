@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import ShopsImage from '@/app/ui/img/Shops.png';
+import ShopsImage from '@/app/ui/image/Shops.png';
 
 export default function ShopsLogo() {
   const style = {

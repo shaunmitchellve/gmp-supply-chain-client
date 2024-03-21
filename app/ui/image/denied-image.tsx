@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import MTImage from '@/app/ui/img/field.jpg';
+import deniedImage from '@/app/ui/image/access-denied.jpg';
 
-export default function FieldImage() {
+export default function DeniedImage() {
   const style = {
     opacity: 0.7,
     zIndex: -1,
@@ -9,8 +9,8 @@ export default function FieldImage() {
 
   return (
     <Image
-      src={MTImage}
-      alt="Wheat Field with wrong way sign"
+      src={deniedImage}
+      alt="Do Not Enter sign"
       fill={true}
       style={style}
       priority={true}

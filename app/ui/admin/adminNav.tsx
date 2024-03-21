@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import clsx from 'clsx';
-import ShopsLogo from '@/app/ui/shops-logo';
+import ShopsLogo from '@/app/ui/image/shops-logo';
 import {MapIcon, ArrowRightOnRectangleIcon} from '@heroicons/react/24/outline';
 import {signOutClient} from '@/app/lib/actions';
 

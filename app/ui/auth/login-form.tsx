@@ -1,6 +1,6 @@
 'use client';
 
-import MountainImage from '@/app/ui/mountain-truck-image';
+import MountainImage from '@/app/ui/image/mountain-truck-image';
 import {useFormState, useFormStatus} from 'react-dom';
 import Button from '@/app/ui/button';
 import Spinner from '@/app/ui/spinner';

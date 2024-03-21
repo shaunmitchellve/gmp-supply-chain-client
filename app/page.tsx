@@ -1,4 +1,4 @@
-import HomeMap from '@/app/ui/map';
+import HomeMap from '@/app/ui/home/map';
 
 export default async function Home() {
   return (

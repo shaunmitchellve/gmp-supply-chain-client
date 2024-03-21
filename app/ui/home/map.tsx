@@ -4,10 +4,10 @@ import {useEffect, useState} from 'react';
 import {APIProvider, Map, AdvancedMarker} from '@vis.gl/react-google-maps';
 import Spinner from '@/app/ui/spinner';
 import {TruckIcon} from '@heroicons/react/24/solid';
-import Directions from '@/app/ui/directions';
-import Destination from '@/app/ui/destination';
+import Directions from '@/app/ui/home/directions';
+import Destination from '@/app/ui/home/destination';
 import clsx from 'clsx';
-import ClientNav from '@/app/ui/clientNav';
+import ClientNav from '@/app/ui/home/clientNav';
 import {fetcher} from '@/app/lib/utils';
 import useSWR from 'swr';
 

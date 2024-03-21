@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import MTImage from '@/app/ui/img/mountain-truck.jpg';
+import MTImage from '@/app/ui/image/mountain-truck.jpg';
 
 export default function MountainImage() {
   const style = {
