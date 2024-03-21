@@ -11,7 +11,7 @@ import clsx from 'clsx';
 export default async function FilterBar({
   driver,
   date,
-  tripId
+  tripId,
 }: {
   driver: string;
   date: string;
@@ -51,7 +51,13 @@ export default async function FilterBar({
   );
 }
 
-async function ShowTrips({trips, tripId}: {trips: ReturnTrips[]; tripId: string | null}) {
+async function ShowTrips({
+  trips,
+  tripId,
+}: {
+  trips: ReturnTrips[];
+  tripId: string | null;
+}) {
   if (Object.keys(trips).length === 0) {
     return <p className="text-center">No trips found</p>;
   }
@@ -75,9 +81,10 @@ async function ShowTrips({trips, tripId}: {trips: ReturnTrips[]; tripId: string 
     tripsList.push(
       <div
         className={clsx({
-          "bg-white": tripId !== trips[i].id,
-          "bg-gray-300": tripId === trips[i].id,
-          "max-w-md mx-auto text-xs rounded-xl shadow-md overflow-hidden m-1": true
+          'bg-white': tripId !== trips[i].id,
+          'bg-gray-300': tripId === trips[i].id,
+          'max-w-md mx-auto text-xs rounded-xl shadow-md overflow-hidden m-1':
+            true,
         })}
       >
         <div className="p-4">

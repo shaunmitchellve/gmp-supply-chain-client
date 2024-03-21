@@ -12,5 +12,5 @@ export function FormInputsSkeleton() {
 export function TripsSkeleton() {
   return (
     <div className="animate-pulse relative overflow-hidden rounded-xl bg-gray-500 p2 shadow-sm max-w-md h-[200px] ml-9 mr-9" />
-  )
+  );
 }

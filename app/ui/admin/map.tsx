@@ -127,7 +127,7 @@ function DrawTrips({routeId}: {routeId: string}) {
         am.map = null;
       }
 
-      if (zoomL){
+      if (zoomL) {
         zoomL.remove();
       }
 
