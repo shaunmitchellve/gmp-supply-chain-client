@@ -38,7 +38,7 @@ const authConfig = {
     },
     async session({session, token}) {
       session.isAdmin = token.isAdmin;
-      if (session.user !== undefined) {
+      if (session.user !== undefined && token.email) {
         session.user.email = token.email;
         if (token.sub) {
           session.user.id = token.sub;

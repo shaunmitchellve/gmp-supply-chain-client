@@ -5,7 +5,11 @@
   ],
   "rules": {
     "node/no-unpublished-import": ["error", {
-      "allowModules": ["tailwindcss"]
+      "allowModules": ["tailwindcss", "jest", "@testing-library/react", "@testing-library/jest-dom"]
     }]
+  },
+  "plugins": ["jest"],
+  "env": {
+    "jest/globals": true
   }
 }

@@ -36,6 +36,7 @@ export default function AdminNav() {
               )}
               title={link.name}
               aria-label={link.name}
+              aria-current={pathname === link.href ? 'page' : undefined}
             >
               <LinkIcon className="w-6 h-6 mt-3" />
             </Link>
