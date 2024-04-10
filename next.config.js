@@ -4,6 +4,7 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['undici'],
   },
+  output: 'standalone',
 };
 
 module.exports = nextConfig;
