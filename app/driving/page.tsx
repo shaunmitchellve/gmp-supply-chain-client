@@ -19,8 +19,17 @@ import useSWR from 'swr';
 import {getMockData} from '@/app/lib/actions';
 import {saveLocation} from '@/app/lib/utils';
 import {v4 as uuidv4} from 'uuid';
+import {Suspense} from 'react';
 
 export default function DrivingPage() {
+  return (
+    <Suspense>
+      <LoadingPage />
+    </Suspense>
+  );
+}
+
+function LoadingPage() {
   const {data: apiKey, isLoading: apiKeyLoading} = useSWR(
     '/api?key=MAPS_API_KEY',
     fetcher,
