@@ -6,10 +6,6 @@ Traditional methods of truck tracking, such as phone calls and email updates, ar
 
 The Supply Chain Truck Tracking Mobile Webpage provides a centralized platform for managing and tracking truck movements. It utilizes HTML5 Geolocation technology to provide real-time updates on truck locations, allowing users to monitor their progress and identify any potential delays or exceptions.
 
-
-
-![admin](./docs/admin.png)
-
 ## Roadmap
 
 ### Path to V1
