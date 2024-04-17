@@ -6,16 +6,26 @@ Traditional methods of truck tracking, such as phone calls and email updates, ar
 
 The Supply Chain Truck Tracking Mobile Webpage provides a centralized platform for managing and tracking truck movements. It utilizes HTML5 Geolocation technology to provide real-time updates on truck locations, allowing users to monitor their progress and identify any potential delays or exceptions.
 
+
+
+![admin](./docs/admin.png)
+
 ## Roadmap
 
 ### Path to V1
 
-- User Credentials / login for tracking drivers
-- Search for the destination Warehouse
-- Track Truck Location
-- Generate ETA to destination
-- Interactive map with truck location markers
-- Route visualization
+- [x] User Credentials / login for tracking drivers
+![trackit](./docs/Track-It.png)
+- [x] Search for the destination Warehouse
+![search](./docs/search.png)
+- [x] Track Truck Location
+- [x] Generate ETA to destination
+- [x] Interactive map with truck location markers
+- [x] Single Route visualization
+![routes](./docs/routes.png)
+- [x] Admin section for searching for completed deliveries
+![admin](./docs/admin.png)
+- [] Mock Data w/ management
 
 ## Google Cloud Setup
 ### This is incomplete, I will update this in more details later.
