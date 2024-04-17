@@ -1,0 +1,11 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata: 
+  name: deploy-track-it
+profiles:
+- name: run-prod
+  manifests:
+    rawYaml:
+    - run-service-prod.yaml
+  deploy:
+    cloudrun: {}

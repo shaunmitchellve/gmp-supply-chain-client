@@ -1,0 +1,9 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: deploy-run-service-prod
+spec:
+  template:
+    spec:
+      containers:
+        - image: location-docker.pkg.dev/projectid/repo/client:latest # from-param: ${LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/client:latest

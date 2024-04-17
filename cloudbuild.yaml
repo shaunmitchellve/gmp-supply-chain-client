@@ -7,6 +7,10 @@ steps:
     args: ['test']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/client', '.']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: ['deploy', 'releases', 'create', "rel-${BUILD_ID}", '--delivery-pipeline', 'cymbol-track-it',
+      '--region', '${_LOCATION}', '--to-target', 'run-prod', '--deploy-parameters=PROJECT_ID=$PROJECT_ID,LOCATION=${_LOCATION},REPO=${_REPOSITORY}']
 images:
   - '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/client'
   

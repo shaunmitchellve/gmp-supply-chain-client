@@ -1,0 +1,17 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: cymbol-track-it
+description: Track-It Pipeline
+serialPipeline:
+  stages:
+  - targetId: run-prod
+    profiles: [prod]
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: run-prod
+description: Cloud Run production service
+run:
+  location: projects/projectid/locations/location # from-param: projects/${PROJECT}/locations/${LOCATION}

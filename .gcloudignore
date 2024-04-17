@@ -9,5 +9,3 @@ __tests__
 .editorconfig
 cloudbuild.yaml
 clouddeploy.yaml
-run-service-prod.yaml
-skaffold.yaml
