@@ -21,7 +21,7 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@auth/core": "^0.28.0",
+    "@auth/core": "^0.37.1",
     "@google-cloud/secret-manager": "^5.0.1",
     "@heroicons/react": "^2.0.18",
     "@vis.gl/react-google-maps": "^0.5.4",
@@ -29,7 +29,7 @@
     "firebase": "^10.9.0",
     "firebase-admin": "^12.0.0",
     "next": "14.2.12",
-    "next-auth": "^5.0.0-beta.3",
+    "next-auth": "^5.0.0-beta.23",
     "react": "^18",
     "react-dom": "^18",
     "swr": "^2.2.4",
