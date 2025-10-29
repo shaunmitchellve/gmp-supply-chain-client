@@ -29,7 +29,7 @@
     "firebase": "^11.2.0",
     "firebase-admin": "^12.0.0",
     "next": "14.2.32",
-    "next-auth": "^5.0.0-beta.23",
+    "next-auth": "^5.0.0-beta.30",
     "react": "^18",
     "react-dom": "^18",
     "swr": "^2.2.4",
