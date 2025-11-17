@@ -1,3 +1,4 @@
+import { AdapterUser } from '@auth/core/adapters';
 import type {NextAuthConfig} from 'next-auth';
 import {v4 as uuidv4} from 'uuid';
 
@@ -29,19 +30,19 @@ const authConfig = {
     async jwt({token, user}) {
       // @todo: Add in hook for verififing email
       if (user) {
-        token.emailVerified = user.emailVerified;
-        token.isAdmin = user.isAdmin;
+        token.emailVerified = (user as any).emailVerified;
+        token.isAdmin = (user as any).isAdmin;
         token.email = user.email;
       }
 
       return token;
     },
     async session({session, token}) {
-      session.isAdmin = token.isAdmin;
+      (session as any).isAdmin = token.isAdmin;
       if (session.user !== undefined && token.email) {
         session.user.email = token.email;
         if (token.sub) {
-          session.user.id = token.sub;
+          (session.user as any).id = token.sub;
         }
       }
 

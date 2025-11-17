@@ -1,14 +1,14 @@
 {
   "extends": [
     "next/core-web-vitals",
-    "./node_modules/gts/"
+    "eslint-config-next"
   ],
   "rules": {
     "node/no-unpublished-import": ["error", {
       "allowModules": ["tailwindcss", "jest", "@testing-library/react", "@testing-library/jest-dom"]
     }]
   },
-  "plugins": ["jest"],
+  "plugins": ["jest", "node"],
   "env": {
     "jest/globals": true
   }

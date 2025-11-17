@@ -5,6 +5,12 @@ declare module '@auth/core/types' {
   }
 
   export interface Session {
+    user?: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
     isAdmin: boolean | undefined;
   }
 }
@@ -12,6 +18,7 @@ declare module '@auth/core/types' {
 declare module '@auth/core/jwt' {
   export interface JWT {
     isAdmin: boolean | undefined;
+    emailVerified?: boolean;
   }
 }
 
