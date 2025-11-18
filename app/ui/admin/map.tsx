@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useRef} from 'react';
 import {
   APIProvider,
   Map,
@@ -64,16 +64,9 @@ export default function AdminMap({tripId}: {tripId: string}) {
 function DrawTrips({routeId}: {routeId: string}) {
   const map = useMap();
   const marker = useMapsLibrary('marker');
-  const polyLineOptions = {
-    clickable: false,
-    strokeOpacity: 1.0,
-    strokeWeight: 4,
-    strokeColor: 'red',
-    zIndex: 2,
-  };
   const [legs, setLegs] = useState<Legs[]>([]);
-  let avm: google.maps.marker.AdvancedMarkerElement[] = [];
-  let zoomL: google.maps.MapsEventListener;
+  const avm = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const zoomL = useRef<google.maps.MapsEventListener | null>(null);
 
   useEffect(() => {
     if (routeId) {
@@ -82,11 +75,20 @@ function DrawTrips({routeId}: {routeId: string}) {
   }, [routeId]);
 
   useEffect(() => {
-    if (!map || legs.length === 0) return;
+    if (!map || !marker || legs.length === 0) return;
+
+    const polyLineOptions = {
+      clickable: false,
+      strokeOpacity: 1.0,
+      strokeWeight: 4,
+      strokeColor: 'red',
+      zIndex: 2,
+    };
+
     const path: google.maps.LatLngLiteral[] = [];
     const bounds = new google.maps.LatLngBounds();
 
-    if (legs.length > 0 && marker !== null) {
+    if (legs.length > 0) {
       for (const leg of legs) {
         bounds.extend(new google.maps.LatLng(leg.lat, leg.lng));
         bounds.extend(new google.maps.LatLng(leg.lat, leg.lng));
@@ -100,7 +102,7 @@ function DrawTrips({routeId}: {routeId: string}) {
           gmpClickable: true,
         });
 
-        avm.push(am);
+        avm.current.push(am);
       }
     }
 
@@ -108,12 +110,12 @@ function DrawTrips({routeId}: {routeId: string}) {
     route.setPath(path);
     route.setMap(map);
 
-    if (avm.length > 0) {
-      zoomL = map.addListener('zoom_changed', () => {
+    if (avm.current.length > 0) {
+      zoomL.current = map.addListener('zoom_changed', () => {
         const zoom = map.getZoom();
 
         if (zoom) {
-          for (const am of avm) {
+          for (const am of avm.current) {
             am.map = zoom > 14 ? map : null;
           }
         }
@@ -123,17 +125,17 @@ function DrawTrips({routeId}: {routeId: string}) {
     map.fitBounds(bounds);
 
     return () => {
-      for (const am of avm) {
+      for (const am of avm.current) {
         am.map = null;
       }
 
-      if (zoomL) {
-        zoomL.remove();
+      if (zoomL.current) {
+        zoomL.current.remove();
       }
 
-      avm = []; // eslint-disable-line react-hooks/exhaustive-deps
+      avm.current = [];
     };
-  }, [legs.length]);
+  }, [legs, map, marker]);
 
   return <></>;
 }

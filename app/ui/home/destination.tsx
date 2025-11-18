@@ -17,36 +17,40 @@ export default function DestinationCard({
   const routesLibrary = useMapsLibrary('places');
   let address = '';
 
-  if (routesLibrary && !autoComplete.current) {
-    if (inputRef.current) {
-      autoComplete.current = new routesLibrary.Autocomplete(inputRef.current);
+  React.useEffect(() => {
+    if (routesLibrary && !autoComplete.current) {
+      if (inputRef.current) {
+        autoComplete.current = new routesLibrary.Autocomplete(
+          inputRef.current
+        );
 
-      autoComplete.current.addListener('place_changed', () => {
-        if (autoComplete.current !== null) {
-          const place = autoComplete.current.getPlace();
+        autoComplete.current.addListener('place_changed', () => {
+          if (autoComplete.current !== null) {
+            const place = autoComplete.current.getPlace();
 
-          if (!place.geometry || !place.geometry?.location) {
-            console.log('No places available for: ', place.name);
-            return;
+            if (!place.geometry || !place.geometry?.location) {
+              console.log('No places available for: ', place.name);
+              return;
+            }
+
+            if (place.address_components) {
+              const newAddress = fullAddress(place.address_components);
+
+              const buttonRef = document.getElementById('go-button');
+
+              buttonRef?.addEventListener(
+                'click',
+                () => {
+                  setDestination(newAddress);
+                },
+                {once: true}
+              );
+            }
           }
-
-          if (place.address_components) {
-            address = fullAddress(place.address_components);
-
-            const buttonRef = document.getElementById('go-button');
-
-            buttonRef?.addEventListener(
-              'click',
-              () => {
-                setDestination(address);
-              },
-              {once: true}
-            );
-          }
-        }
-      });
+        });
+      }
     }
-  }
+  }, [routesLibrary, address, setDestination]);
 
   if (className !== undefined) {
     className += ' ';
