@@ -119,7 +119,7 @@ function StartDriving({
   });
   const [index, setIndex] = useState(0);
   const useMock = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
-  let geoLocationID: number | undefined = undefined;
+  const geoLocationID = useRef<number | undefined>(undefined);
   const tripId = useRef<string | null>(null);
   const destinationCoords = useRef<google.maps.LatLngLiteral | null>(null);
   const placeId = useRef<string | null>(null);
@@ -180,12 +180,11 @@ function StartDriving({
   useEffect(() => {
     if (useMock) {
       getMockData().then(coords => {
-        geoLocationID = window.setInterval(() => {
-          // eslint-disable-line react-hooks/exhaustive-deps
+        geoLocationID.current = window.setInterval(() => {
           if (index > coords.length - 1) {
-            clearInterval(geoLocationID);
+            clearInterval(geoLocationID.current);
 
-            return <></>;
+            return;
           }
 
           const l = {
@@ -214,7 +213,7 @@ function StartDriving({
       });
     } else {
       if (navigator.geolocation) {
-        geoLocationID = navigator.geolocation.watchPosition(
+        geoLocationID.current = navigator.geolocation.watchPosition(
           position => {
             setLocation({
               last: location.current,
@@ -228,8 +227,8 @@ function StartDriving({
           },
           error => {
             console.log('Unable to watch position: ', error);
-            if (!useMock && typeof geoLocationID !== 'undefined') {
-              navigator.geolocation.clearWatch(geoLocationID);
+            if (!useMock && typeof geoLocationID.current !== 'undefined') {
+              navigator.geolocation.clearWatch(geoLocationID.current);
             }
           },
           {
@@ -242,13 +241,13 @@ function StartDriving({
     }
 
     return () => {
-      if (!useMock && typeof geoLocationID !== 'undefined') {
-        navigator.geolocation.clearWatch(geoLocationID);
+      if (!useMock && typeof geoLocationID.current !== 'undefined') {
+        navigator.geolocation.clearWatch(geoLocationID.current);
       } else {
-        clearInterval(geoLocationID);
+        clearInterval(geoLocationID.current);
       }
     };
-  }, [index]);
+  }, [index, useMock, stLocation, location, setIndex]);
 
   let polyLine: google.maps.LatLng[];
   const polyLineOptions = {
